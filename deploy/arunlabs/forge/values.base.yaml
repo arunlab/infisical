@@ -1,0 +1,36 @@
+nameOverride: infisical
+
+infisical:
+  fullnameOverride: infisical
+  replicaCount: 1
+  kubeSecretRef: infisical-secrets
+  image:
+    repository: infisical/infisical
+    tag: v0.158.7
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      memory: 1Gi
+
+ingress:
+  enabled: false
+  nginx:
+    enabled: false
+
+postgresql:
+  enabled: true
+  fullnameOverride: postgresql
+  auth:
+    username: infisical
+    database: infisicalDB
+
+redis:
+  enabled: true
+  fullnameOverride: redis
+  architecture: standalone
+  usePassword: true

@@ -1,0 +1,22 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: infisical-ui
+  namespace: infisical
+  labels:
+    app.kubernetes.io/name: infisical
+    app.kubernetes.io/part-of: infisical
+spec:
+  hosts:
+    - vault.arunlabs.com
+  gateways:
+    - istio-system/arunlabs-public-gateway
+  http:
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            host: infisical.infisical.svc.cluster.local
+            port:
+              number: 8080
