@@ -27,9 +27,11 @@ The script:
 
 - creates the `infisical` namespace if needed
 - creates or reuses the `infisical-secrets` Secret
+- patches the Istio ingress service to preserve source IPs
 - generates a temporary Helm values file with the persisted DB and Redis passwords
 - installs or upgrades Infisical with Helm
 - applies the Istio `VirtualService`
+- applies a LAN-only Istio `AuthorizationPolicy` for `vault.arunlabs.com`
 
 ## DNS
 

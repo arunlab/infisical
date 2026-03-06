@@ -30,6 +30,11 @@ done
 
 kubectl apply -f "${SCRIPT_DIR}/namespace.yaml"
 
+kubectl patch svc istio-ingressgateway \
+  -n istio-system \
+  --type merge \
+  -p '{"spec":{"externalTrafficPolicy":"Local"}}'
+
 AUTH_SECRET="$(get_secret_value AUTH_SECRET)"
 ENCRYPTION_KEY="$(get_secret_value ENCRYPTION_KEY)"
 POSTGRES_PASSWORD="$(get_secret_value POSTGRES_PASSWORD)"
@@ -83,6 +88,7 @@ helm upgrade --install "${RELEASE}" "${CHART_DIR}" \
   --timeout 20m
 
 kubectl apply -f "${SCRIPT_DIR}/virtualservice.yaml"
+kubectl apply -f "${SCRIPT_DIR}/authorization-policy.yaml"
 kubectl rollout status deployment/infisical -n "${NAMESPACE}" --timeout=5m
 
 kubectl get pods,svc,virtualservice -n "${NAMESPACE}"
