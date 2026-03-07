@@ -8,7 +8,7 @@ CHART_DIR="${REPO_ROOT}/helm-charts/infisical-standalone-postgres"
 NAMESPACE="infisical"
 RELEASE="infisical"
 SECRETS_NAME="infisical-secrets"
-SITE_URL="https://vault.arunlabs.com"
+SITE_URL="http://localhost:8080"
 RUNTIME_VALUES="${SCRIPT_DIR}/runtime-values.yaml"
 
 require() {
@@ -29,11 +29,6 @@ for cmd in helm jq kubectl openssl; do
 done
 
 kubectl apply -f "${SCRIPT_DIR}/namespace.yaml"
-
-kubectl patch svc istio-ingressgateway \
-  -n istio-system \
-  --type merge \
-  -p '{"spec":{"externalTrafficPolicy":"Local"}}'
 
 AUTH_SECRET="$(get_secret_value AUTH_SECRET)"
 ENCRYPTION_KEY="$(get_secret_value ENCRYPTION_KEY)"
@@ -87,9 +82,6 @@ helm upgrade --install "${RELEASE}" "${CHART_DIR}" \
   --wait \
   --timeout 20m
 
-kubectl apply -f "${SCRIPT_DIR}/private-gateway.yaml"
-kubectl apply -f "${SCRIPT_DIR}/virtualservice.yaml"
-kubectl apply -f "${SCRIPT_DIR}/authorization-policy.yaml"
 kubectl rollout status deployment/infisical -n "${NAMESPACE}" --timeout=5m
 
-kubectl get pods,svc,virtualservice -n "${NAMESPACE}"
+kubectl get pods,svc -n "${NAMESPACE}"

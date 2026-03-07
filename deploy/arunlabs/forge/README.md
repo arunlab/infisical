@@ -6,15 +6,14 @@ This directory contains the `forge` cluster deployment assets for Infisical.
 
 - Cluster: `forge`
 - Namespace: `infisical`
-- Hostname: `vault.arunlabs.com`
-- TLS termination: `istio-system/arunlabs-public-gateway`
+- Exposure: cluster-internal only
+- UI access: `kubectl port-forward`
 
 ## What This Uses
 
 - Upstream Infisical standalone Helm chart from this repo
 - In-cluster PostgreSQL and Redis for the incubating deployment
-- A dedicated Istio `Gateway` resource for Infisical
-- The existing ingress VIP and wildcard certificate for `*.arunlabs.com`
+- Kubernetes `ClusterIP` service only
 
 ## Install
 
@@ -28,25 +27,23 @@ The script:
 
 - creates the `infisical` namespace if needed
 - creates or reuses the `infisical-secrets` Secret
-- patches the Istio ingress service to preserve source IPs
 - generates a temporary Helm values file with the persisted DB and Redis passwords
 - installs or upgrades Infisical with Helm
-- applies the dedicated Istio `Gateway`
-- applies the Istio `VirtualService`
-- applies a LAN-only Istio `AuthorizationPolicy` for `vault.arunlabs.com`
+- configures `SITE_URL` for local port-forward access
 
-## Concern
+## Access
 
-This is a dedicated Istio `Gateway` object, but it still uses the existing ingress service and IP on forge.
-On the current single-node k3s setup, a *true* separate private ingress gateway on port `443` would require another load-balancer IP (for example via MetalLB).
+Use:
 
-## DNS
+```bash
+kubectl port-forward -n infisical svc/infisical 8080:8080
+```
 
-Create a LAN DNS record:
+Then open:
 
-- `vault.arunlabs.com -> 172.16.0.191`
-
-That points the hostname at the forge Istio ingress gateway while still using the public wildcard certificate.
+```text
+http://localhost:8080
+```
 
 ## First Login
 
