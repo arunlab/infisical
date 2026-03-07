@@ -70,3 +70,11 @@ Before running it, create the local Universal Auth credentials manifest describe
 ```text
 ./deploy/arunlabs/forge/secret-sync-validation/README.md
 ```
+
+## App Team Reference
+
+For the reusable app workflow, including how to add a secret in Infisical, sync it into Kubernetes, mount it as a file, and use it as an env var, see:
+
+```text
+./deploy/arunlabs/forge/USING_INFISICAL_SECRETS_IN_K8S.md
+```
