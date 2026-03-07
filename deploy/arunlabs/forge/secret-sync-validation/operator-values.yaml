@@ -1,0 +1,3 @@
+scopedNamespaces:
+  - forge-secrets-test
+scopedRBAC: true

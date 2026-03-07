@@ -48,3 +48,25 @@ http://localhost:8080
 ## First Login
 
 The first user created in the UI becomes the instance admin.
+
+## Kubernetes Secret Sync Validation
+
+A reproducible operator-based mount test lives under `deploy/arunlabs/forge/secret-sync-validation/`.
+
+That bundle validates the path:
+
+```text
+Infisical -> Infisical Operator -> Kubernetes Secret -> pod-mounted file
+```
+
+Run:
+
+```bash
+./deploy/arunlabs/forge/secret-sync-validation/validate.sh
+```
+
+Before running it, create the local Universal Auth credentials manifest described in:
+
+```text
+./deploy/arunlabs/forge/secret-sync-validation/README.md
+```
