@@ -13,7 +13,8 @@ This directory contains the `forge` cluster deployment assets for Infisical.
 
 - Upstream Infisical standalone Helm chart from this repo
 - In-cluster PostgreSQL and Redis for the incubating deployment
-- Existing Istio ingress gateway and wildcard certificate for `*.arunlabs.com`
+- A dedicated Istio `Gateway` resource for Infisical
+- The existing ingress VIP and wildcard certificate for `*.arunlabs.com`
 
 ## Install
 
@@ -30,8 +31,14 @@ The script:
 - patches the Istio ingress service to preserve source IPs
 - generates a temporary Helm values file with the persisted DB and Redis passwords
 - installs or upgrades Infisical with Helm
+- applies the dedicated Istio `Gateway`
 - applies the Istio `VirtualService`
 - applies a LAN-only Istio `AuthorizationPolicy` for `vault.arunlabs.com`
+
+## Concern
+
+This is a dedicated Istio `Gateway` object, but it still uses the existing ingress service and IP on forge.
+On the current single-node k3s setup, a *true* separate private ingress gateway on port `443` would require another load-balancer IP (for example via MetalLB).
 
 ## DNS
 

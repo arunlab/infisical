@@ -87,6 +87,7 @@ helm upgrade --install "${RELEASE}" "${CHART_DIR}" \
   --wait \
   --timeout 20m
 
+kubectl apply -f "${SCRIPT_DIR}/private-gateway.yaml"
 kubectl apply -f "${SCRIPT_DIR}/virtualservice.yaml"
 kubectl apply -f "${SCRIPT_DIR}/authorization-policy.yaml"
 kubectl rollout status deployment/infisical -n "${NAMESPACE}" --timeout=5m

@@ -10,7 +10,7 @@ spec:
   hosts:
     - vault.arunlabs.com
   gateways:
-    - istio-system/arunlabs-public-gateway
+    - istio-system/arunlabs-private-gateway
   http:
     - match:
         - uri:
