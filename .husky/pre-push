@@ -1,0 +1,32 @@
+#!/usr/bin/env sh
+
+echo "🔐 Pre-push hook is running!"
+
+if ! command -v infisical >/dev/null 2>&1; then
+    echo "\nError: Infisical CLI is not installed. Please install the Infisical CLI before pushing.\n You can refer to the documentation at https://infisical.com/docs/cli/overview\n\n"
+    exit 1
+fi
+
+zero_ref="0000000000000000000000000000000000000000"
+scan_required="false"
+
+while read -r local_ref local_sha remote_ref remote_sha
+do
+    if [ -z "${local_sha}" ] || [ "${local_sha}" = "${zero_ref}" ]; then
+        continue
+    fi
+
+    scan_required="true"
+
+    if [ "${remote_sha}" = "${zero_ref}" ]; then
+        echo "Scanning commits for ${local_ref} that are not on a remote..."
+        infisical scan --log-opts="--no-merges ${local_sha} --not --remotes" --redact --no-color
+    else
+        echo "Scanning commits in range ${remote_sha}..${local_sha}..."
+        infisical scan --log-opts="--no-merges ${remote_sha}..${local_sha}" --redact --no-color
+    fi
+done
+
+if [ "${scan_required}" = "false" ]; then
+    echo "No commits to scan."
+fi

@@ -78,3 +78,9 @@ For the reusable app workflow, including how to add a secret in Infisical, sync 
 ```text
 ./deploy/arunlabs/forge/USING_INFISICAL_SECRETS_IN_K8S.md
 ```
+
+For the compact summary of the forge-specific changes, see:
+
+```text
+./deploy/arunlabs/forge/CHANGE_SUMMARY.md
+```
